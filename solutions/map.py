@@ -14,3 +14,38 @@ log = '''
 Вперед, Вперед, Вперед, Вперед, Вперед, Вправо, Вперед, Влево, Вперед, Влево
 '''
 print(log)
+
+emap = [list(row.strip()) for row in emap.strip().split('\n')]
+log = [day.strip() for day in log.replace(",", "").split()]
+dims = [len(emap), len(emap[0])]
+pos = [3, 6]
+direct = [0, -1]
+
+def rotate(direct, s):
+    return [s * direct[1], -s * direct[0]]
+
+def update(pos, direct, day, cmd):
+    if cmd == "Вперед":
+        new_pos = [
+            (p + d + dim) % dim for p, d, dim in zip(pos, direct, dims)
+        ]
+        return (new_pos, direct, day + 1)
+    elif cmd == "Вправо":
+        return (pos, rotate(direct, 1), day)
+    elif cmd == "Влево":
+        return (pos, rotate(direct, -1), day)
+    else:
+        exit(1)
+
+day = 1
+result = []
+for cmd in log:
+    #print(day, cmd, emap[pos[0]][pos[1]])
+    #print(pos, direct)
+    c = emap[pos[0]][pos[1]]
+    pos, direct, new_day = update(pos, direct, day, cmd)
+    if new_day != day:
+        result.append(c)
+        day = new_day
+
+print(result[88:89 + 11])
